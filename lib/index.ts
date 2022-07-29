@@ -1,22 +1,36 @@
-import { Parser, type ParserOptions } from './parser/index.js';
+import { Parser, type ParserOptions } from "./parser/index";
+import type { DefaultTreeAdapterMap } from "./tree-adapters/default";
+import type { TreeAdapterTypeMap } from "./tree-adapters/interface";
 
-import type { DefaultTreeAdapterMap } from './tree-adapters/default.js';
-import type { TreeAdapterTypeMap } from './tree-adapters/interface.js';
+export {
+  type DefaultTreeAdapterMap,
+  defaultTreeAdapter,
+} from "./tree-adapters/default";
+export type {
+  TreeAdapter,
+  TreeAdapterTypeMap,
+} from "./tree-adapters/interface";
+export { type ParserOptions, /** @internal */ Parser } from "./parser/index";
+export {
+  serialize,
+  serializeOuter,
+  type SerializerOptions,
+} from "./serializer/index";
+export type { ParserError } from "./common/error-codes";
 
-export { type DefaultTreeAdapterMap, defaultTreeAdapter } from './tree-adapters/default.js';
-export type { TreeAdapter, TreeAdapterTypeMap } from './tree-adapters/interface.js';
-export { type ParserOptions, /** @internal */ Parser } from './parser/index.js';
-export { serialize, serializeOuter, type SerializerOptions } from './serializer/index.js';
-export type { ParserError } from './common/error-codes.js';
-
 /** @internal */
-export * as foreignContent from './common/foreign-content.js';
+export * as foreignContent from "./common/foreign-content";
 /** @internal */
-export * as html from './common/html.js';
+export * as html from "./common/html";
 /** @internal */
-export * as Token from './common/token.js';
+export * as Token from "./common/token";
 /** @internal */
-export { Tokenizer, type TokenizerOptions, TokenizerMode, type TokenHandler } from './tokenizer/index.js';
+export {
+  Tokenizer,
+  type TokenizerOptions,
+  TokenizerMode,
+  type TokenHandler,
+} from "./tokenizer/index";
 
 // Shorthands
 
@@ -38,10 +52,10 @@ export { Tokenizer, type TokenizerOptions, TokenizerMode, type TokenHandler } fr
  *```
  */
 export function parse<T extends TreeAdapterTypeMap = DefaultTreeAdapterMap>(
-    html: string,
-    options?: ParserOptions<T>
-): T['document'] {
-    return Parser.parse(html, options);
+  html: string,
+  options?: ParserOptions<T>
+): T["document"] {
+  return Parser.parse(html, options);
 }
 
 /**
@@ -67,29 +81,32 @@ export function parse<T extends TreeAdapterTypeMap = DefaultTreeAdapterMap>(
  * @param options Parsing options.
  * @returns DocumentFragment
  */
-export function parseFragment<T extends TreeAdapterTypeMap = DefaultTreeAdapterMap>(
-    fragmentContext: T['parentNode'] | null,
-    html: string,
-    options: ParserOptions<T>
-): T['documentFragment'];
-export function parseFragment<T extends TreeAdapterTypeMap = DefaultTreeAdapterMap>(
-    html: string,
-    options?: ParserOptions<T>
-): T['documentFragment'];
-export function parseFragment<T extends TreeAdapterTypeMap = DefaultTreeAdapterMap>(
-    fragmentContext: T['parentNode'] | null | string,
-    html?: string | ParserOptions<T>,
-    options?: ParserOptions<T>
-): T['documentFragment'] {
-    if (typeof fragmentContext === 'string') {
-        options = html as ParserOptions<T>;
-        html = fragmentContext;
-        fragmentContext = null;
-    }
+export function parseFragment<
+  T extends TreeAdapterTypeMap = DefaultTreeAdapterMap
+>(
+  fragmentContext: T["parentNode"] | null,
+  html: string,
+  options: ParserOptions<T>
+): T["documentFragment"];
+export function parseFragment<
+  T extends TreeAdapterTypeMap = DefaultTreeAdapterMap
+>(html: string, options?: ParserOptions<T>): T["documentFragment"];
+export function parseFragment<
+  T extends TreeAdapterTypeMap = DefaultTreeAdapterMap
+>(
+  fragmentContext: T["parentNode"] | null | string,
+  html?: string | ParserOptions<T>,
+  options?: ParserOptions<T>
+): T["documentFragment"] {
+  if (typeof fragmentContext === "string") {
+    options = html as ParserOptions<T>;
+    html = fragmentContext;
+    fragmentContext = null;
+  }
 
-    const parser = Parser.getFragmentParser(fragmentContext, options);
+  const parser = Parser.getFragmentParser(fragmentContext, options);
 
-    parser.tokenizer.write(html as string, true);
+  parser.tokenizer.write(html as string, true);
 
-    return parser.getFragment();
+  return parser.getFragment();
 }

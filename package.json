@@ -7,8 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "compile": "tsc --target es5 --downlevelIteration index.ts",
-    "start": "npm compile && ts-node index.ts"
+    
   },
   "keywords": [],
   "author": "",
